@@ -16,7 +16,9 @@ public class Test {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        GraphicManager gm = new OpenGLManager();
+        gm.setFPS(100).setFullscreen(false).setMouseGrabbed(true).setWindowTitle("asd");
+        gm.init();
     }
     
 }
