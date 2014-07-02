@@ -5,6 +5,7 @@
  */
 package opengl2dutils;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import org.lwjgl.LWJGLException;
@@ -14,6 +15,8 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import static org.lwjgl.opengl.EXTFramebufferObject.*;
 import static org.lwjgl.opengl.GL11.*;
+import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.util.ResourceLoader;
 
 /**
  *
@@ -28,12 +31,74 @@ public class OpenGLManager implements GraphicManager {
 
     @Override
     public void drawTexture(Texture texture, float x, float y) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        glEnable(GL_TEXTURE_2D);
+        glColor3f(1, 1, 1);
+        glViewport(0, 0, width, height);
+        int textWidth = texture.getWidth();
+        int textHeight = texture.getHeight();
+        glBindTexture(GL_TEXTURE_2D, texture.getId());
+        glBegin(GL_QUADS);
+        {
+            glTexCoord2f(0, 0);
+            glVertex2f(x,   y);
+            glTexCoord2f(1, 0);
+            glVertex2f((x + textWidth),  y);
+            glTexCoord2f(1, 1);
+            glVertex2f((x + textWidth), (y + textHeight));
+            glTexCoord2f(0, 1);
+            glVertex2f(x,  (y + textHeight));
+        }
+        glEnd();
+        glDisable(GL_QUADS);
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     @Override
     public void drawTexture(Texture texture, float x, float y, Texture target) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int framebufferID;
+        int textureID = texture.getId();
+        int targetID = target.getId();
+        if (!framebuffers.containsKey(targetID)) {
+            framebufferID = glGenFramebuffersEXT();
+            glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebufferID);
+            glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, targetID, 0);
+        } else {
+            framebufferID = framebuffers.get(targetID);
+        }
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebufferID);
+        
+        
+        glEnable(GL_TEXTURE_2D);
+        glColor3f(1, 1, 1);
+        
+        glBindTexture(GL_TEXTURE_2D, textureID);
+        glViewport(0, 0, target.getWidth(), target.getHeight());
+        glScalef(width / target.getWidth(), height / target.getHeight(), 1.0f);
+        
+        
+        int textWidth = texture.getWidth();
+        int textHeight = texture.getHeight();
+        glBindTexture(GL_TEXTURE_2D, texture.getId());
+        glBegin(GL_QUADS);
+        {
+            glTexCoord2f(0, 0);
+            glVertex2f(x,   y);
+            glTexCoord2f(1, 0);
+            glVertex2f((x + textWidth),  y);
+            glTexCoord2f(1, 1);
+            glVertex2f((x + textWidth), (y + textHeight));
+            glTexCoord2f(0, 1);
+            glVertex2f(x,  (y + textHeight));
+        }
+        glEnd();
+        glScalef(1.0f, 1.0f, 1.0f); // Меняем масштаб обратно
+        glDisable(GL_QUADS);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        
+        
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+        glViewport(0, 0, width, height);
+        
     }
 
     @Override
@@ -52,20 +117,35 @@ public class OpenGLManager implements GraphicManager {
         glBindTexture(GL_TEXTURE_2D, textureID);									// Bind the colorbuffer texture
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);				// make it linear filterd
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_INT, (java.nio.ByteBuffer) null);	// Create the texture data
-        glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, textureID, 0); // attach it to the framebuffer
 
         glViewport(0, 0, width, height);
         glClearColor(0.5f, 0.5f, 0.5f, 1.0f); // Фоновый серый цвет. Для теста, полностью ли текстура заполняется уровнем (если нет, будет виден фон)
         glClear(GL_COLOR_BUFFER_BIT);			// Clear Screen And Depth Buffer on the fbo to red
         glLoadIdentity();
-        OpenGLTexture texture = new OpenGLTexture();
+        glBindTexture(GL_TEXTURE_2D, 0);
         
+        Texture texture = new Texture(textureID);
+        texture.setWidth(width);
+        texture.setHeight(height);
         return texture;
     }
 
     @Override
-    public Texture createTexture(String filePath) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Texture createTexture(String filePath, String type) {
+        try {
+            org.newdawn.slick.opengl.Texture tex = TextureLoader.getTexture(type, ResourceLoader.getResourceAsStream(filePath));
+            Texture texture = new Texture(tex.getTextureID());
+            texture.setHeight(tex.getTextureHeight());
+            texture.setWidth(tex.getTextureWidth());
+            return texture;
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public void deleteTexture(Texture texture) {
+        glDeleteTextures(texture.getId());
     }
 
     private class ListeningThread extends Thread {
@@ -173,6 +253,7 @@ public class OpenGLManager implements GraphicManager {
         return this;
     }
 
+    @Override
     public void renderScene() {
         scene.render();
         Display.update();

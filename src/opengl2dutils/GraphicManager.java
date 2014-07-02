@@ -27,7 +27,8 @@ public interface GraphicManager {
     GraphicManager setMouseGrabbed(boolean grabbed);
     GraphicManager setWindowTitle(String title);
     Texture createTexture(int width, int height);
-    Texture createTexture(String filePath);
+    Texture createTexture(String filePath, String type);
+    void deleteTexture(Texture texture);
     
     void drawTexture(Texture texture, float x, float y);
     void drawTexture(Texture texture, float x, float y, Texture target);
