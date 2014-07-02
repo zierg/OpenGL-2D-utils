@@ -6,6 +6,8 @@
 
 package opengl2dutils;
 
+import java.io.IOException;
+
 /**
  *
  * @author ivko0314
@@ -15,10 +17,12 @@ public class Test {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        GraphicManager gm = new OpenGLManager();
+    public static void main(String[] args) throws IOException {
+        /*GraphicManager gm = new OpenGLManager();
         gm.setFPS(100).setFullscreen(false).setMouseGrabbed(true).setWindowTitle("asd");
-        gm.init();
+        gm.init();*/
+        int[][] x = new int[256][256];
+        System.in.read();
     }
     
 }

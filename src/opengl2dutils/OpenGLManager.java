@@ -5,11 +5,14 @@
  */
 package opengl2dutils;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import static org.lwjgl.opengl.EXTFramebufferObject.*;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
@@ -20,6 +23,50 @@ public class OpenGLManager implements GraphicManager {
 
     private boolean isListening = false;
     private int listeningInterval = 10;
+
+    private final Map<Integer, Integer> framebuffers = new HashMap<>();
+
+    @Override
+    public void drawTexture(Texture texture, float x, float y) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void drawTexture(Texture texture, float x, float y, Texture target) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void drawTexture(Texture texture, float x, float y, float fromX, float fromY, float toX, float toY) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void drawTexture(Texture texture, float x, float y, float fromX, float fromY, float toX, float toY, Texture target) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Texture createTexture(int width, int height) {
+        int textureID = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, textureID);									// Bind the colorbuffer texture
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);				// make it linear filterd
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_INT, (java.nio.ByteBuffer) null);	// Create the texture data
+        glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, textureID, 0); // attach it to the framebuffer
+
+        glViewport(0, 0, width, height);
+        glClearColor(0.5f, 0.5f, 0.5f, 1.0f); // Фоновый серый цвет. Для теста, полностью ли текстура заполняется уровнем (если нет, будет виден фон)
+        glClear(GL_COLOR_BUFFER_BIT);			// Clear Screen And Depth Buffer on the fbo to red
+        glLoadIdentity();
+        OpenGLTexture texture = new OpenGLTexture();
+        
+        return texture;
+    }
+
+    @Override
+    public Texture createTexture(String filePath) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     private class ListeningThread extends Thread {
         // Интервал в миллисекундах, через который нужно обновлять игру

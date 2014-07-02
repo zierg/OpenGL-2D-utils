@@ -26,9 +26,9 @@ public interface GraphicManager {
     GraphicManager setVSync(boolean vSync);
     GraphicManager setMouseGrabbed(boolean grabbed);
     GraphicManager setWindowTitle(String title);
+    Texture createTexture(int width, int height);
+    Texture createTexture(String filePath);
     
-    void drawTexture(Texture texture);
-    void drawTexture(Texture texture, Texture target);
     void drawTexture(Texture texture, float x, float y);
     void drawTexture(Texture texture, float x, float y, Texture target);
     void drawTexture(Texture texture, float x, float y, float fromX, float fromY, float toX, float toY);

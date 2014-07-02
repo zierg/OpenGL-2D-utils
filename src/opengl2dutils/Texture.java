@@ -11,5 +11,6 @@ package opengl2dutils;
  * @author ivko0314
  */
 public interface Texture {
-    
+    float getWidth();
+    float getHeight();
 }
