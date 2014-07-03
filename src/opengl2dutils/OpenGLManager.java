@@ -41,7 +41,8 @@ public class OpenGLManager implements GraphicManager {
 
     @Override
     public void drawTexture(Texture texture, float x, float y) {
-        glEnable(GL_TEXTURE_2D);
+        drawTexture(texture, x, y, 0, 0, texture.getWidth(), texture.getHeight());
+        /*glEnable(GL_TEXTURE_2D);
         glColor3f(1, 1, 1);
         glViewport(0, 0, width, height);
         glScalef(1.0f, 1.0f, 1.0f);
@@ -62,7 +63,7 @@ public class OpenGLManager implements GraphicManager {
         }
         glEnd();
         glDisable(GL_QUADS);
-        glBindTexture(GL_TEXTURE_2D, 0);
+        glBindTexture(GL_TEXTURE_2D, 0);*/
     }
 
     @Override
@@ -120,7 +121,33 @@ public class OpenGLManager implements GraphicManager {
 
     @Override
     public void drawTexture(Texture texture, float x, float y, float fromX, float fromY, float toX, float toY) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        glEnable(GL_TEXTURE_2D);
+        glColor3f(1, 1, 1);
+        glViewport(0, 0, width, height);
+        glScalef(1.0f, 1.0f, 1.0f);
+        int textWidth = texture.getWidth();
+        int textHeight = texture.getHeight();
+        glBindTexture(GL_TEXTURE_2D, texture.getId());
+        float xBegin = fromX/textWidth;
+        float yBegin = fromY/textHeight;
+        float xEnd = toX/textWidth;
+        float yEnd = toY/textHeight;
+        textWidth=(int)(toX-fromX);
+        textHeight=(int)(toY-fromY);
+        glBegin(GL_QUADS);
+        {
+            glTexCoord2f(xBegin, yBegin);
+            glVertex2f(x, y);
+            glTexCoord2f(xEnd, yBegin);
+            glVertex2f((x + textWidth), y);
+            glTexCoord2f(xEnd, yEnd);
+            glVertex2f((x + textWidth), (y + textHeight));
+            glTexCoord2f(xBegin, yEnd);
+            glVertex2f(x, (y + textHeight));
+        }
+        glEnd();
+        glDisable(GL_QUADS);
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     @Override
@@ -226,7 +253,6 @@ public class OpenGLManager implements GraphicManager {
 
     @Override
     public void initWithCustomConfiguration(GraphicConfigurator configurator) {
-        init();
         configurator.configure();
     }
 
