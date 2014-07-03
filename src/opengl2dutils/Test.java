@@ -7,6 +7,7 @@ package opengl2dutils;
 
 import java.io.IOException;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glClear;
@@ -27,15 +28,18 @@ public class Test {
         GraphicManager gm = new OpenGLManager();
         gm.setFPS(100).setFullscreen(false).setMouseGrabbed(false).setWindowTitle("asd");
         gm.init();
-        Texture t = gm.createTexture("grounds.png", "PNG");
-        Texture t2 = gm.createTexture(20, 20);
-        gm.drawTexture(t2, 20, 20, t);
+        Texture t1 = gm.createTexture("grounds.png", "PNG");
+        Texture t2 = gm.createTexture("ship.png", "PNG");
+        Texture t3 = gm.createTexture(50, 40);
+        gm.drawTexture(t2, 20, 20, t3);
+        gm.drawTexture(t2, 20, 20, t1);
+        //GL11.glScalef(2, 2, 2);
         while (!Display.isCloseRequested()) {
             //glEnable(GL_TEXTURE_2D);
 
             glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
             glClear(GL_COLOR_BUFFER_BIT);
-            gm.drawTexture(t, 0, 0);
+            gm.drawTexture(t1, 0, 0);
             //glDisable(GL_TEXTURE_2D);
             Display.update();
             Display.sync(100);

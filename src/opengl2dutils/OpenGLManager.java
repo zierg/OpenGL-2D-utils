@@ -27,6 +27,16 @@ public class OpenGLManager implements GraphicManager {
     private boolean isListening = false;
     private int listeningInterval = 10;
 
+    private boolean fullscreen = false;
+    private int width = 800;
+    private int height = 600;
+    private boolean vSync = false;
+    private int fps = 60;
+    private boolean mouseGrabbed = false;
+    private String title = "Program";
+    private GraphicScene scene = null;
+    private ListeningThread listeningThread = null;
+
     private final Map<Integer, Integer> framebuffers = new HashMap<>();
 
     @Override
@@ -34,19 +44,21 @@ public class OpenGLManager implements GraphicManager {
         glEnable(GL_TEXTURE_2D);
         glColor3f(1, 1, 1);
         glViewport(0, 0, width, height);
+        glScalef(1.0f, 1.0f, 1.0f);
         int textWidth = texture.getWidth();
         int textHeight = texture.getHeight();
+        // System.out.println("textWidth = " + textWidth + ", textHeight = " + textHeight);
         glBindTexture(GL_TEXTURE_2D, texture.getId());
         glBegin(GL_QUADS);
         {
             glTexCoord2f(0, 0);
-            glVertex2f(x,   y);
+            glVertex2f(x, y);
             glTexCoord2f(1, 0);
-            glVertex2f((x + textWidth),  y);
+            glVertex2f((x + textWidth), y);
             glTexCoord2f(1, 1);
             glVertex2f((x + textWidth), (y + textHeight));
             glTexCoord2f(0, 1);
-            glVertex2f(x,  (y + textHeight));
+            glVertex2f(x, (y + textHeight));
         }
         glEnd();
         glDisable(GL_QUADS);
@@ -60,45 +72,50 @@ public class OpenGLManager implements GraphicManager {
         int targetID = target.getId();
         if (!framebuffers.containsKey(targetID)) {
             framebufferID = glGenFramebuffersEXT();
+            framebuffers.put(targetID, framebufferID);
             glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebufferID);
             glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, targetID, 0);
         } else {
             framebufferID = framebuffers.get(targetID);
+            glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebufferID);
         }
-        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebufferID);
-        
-        
+
         glEnable(GL_TEXTURE_2D);
         glColor3f(1, 1, 1);
-        
+
         glBindTexture(GL_TEXTURE_2D, textureID);
         glViewport(0, 0, target.getWidth(), target.getHeight());
-        glScalef(width / target.getWidth(), height / target.getHeight(), 1.0f);
-        
-        
+
+        float w = target.getWidth();
+        float www = width;
+        float h = target.getHeight();
+        float hhh = height;
+        glScalef(www / w, hhh / h, 1.0f);
+        //glScalef(width / target.getWidth(), height / target.getHeight(), 1.0f);
+
+        final int yOffset = 0;//height - target.getHeight();
         int textWidth = texture.getWidth();
         int textHeight = texture.getHeight();
-        glBindTexture(GL_TEXTURE_2D, texture.getId());
+
         glBegin(GL_QUADS);
         {
             glTexCoord2f(0, 0);
-            glVertex2f(x,   y);
+            glVertex2f(x, target.getHeight() - y - yOffset);
             glTexCoord2f(1, 0);
-            glVertex2f((x + textWidth),  y);
+            glVertex2f((x + textWidth), target.getHeight() - y - yOffset);
             glTexCoord2f(1, 1);
-            glVertex2f((x + textWidth), (y + textHeight));
+            glVertex2f((x + textWidth), target.getHeight() - (y + textHeight) - yOffset);
             glTexCoord2f(0, 1);
-            glVertex2f(x,  (y + textHeight));
+            glVertex2f(x, target.getHeight() - (y + textHeight) - yOffset);
         }
         glEnd();
-        glScalef(1.0f, 1.0f, 1.0f); // Меняем масштаб обратно
+        glScalef(w / www, h / hhh, 1.0f);//glScalef(1.0f, 1.0f, 1.0f); // Меняем масштаб обратно
         glDisable(GL_QUADS);
         glBindTexture(GL_TEXTURE_2D, 0);
-        
-        
+
         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
         glViewport(0, 0, width, height);
-        
+
     }
 
     @Override
@@ -119,11 +136,11 @@ public class OpenGLManager implements GraphicManager {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_INT, (java.nio.ByteBuffer) null);	// Create the texture data
 
         glViewport(0, 0, width, height);
-        glClearColor(0.5f, 0.5f, 0.5f, 1.0f); // Фоновый серый цвет. Для теста, полностью ли текстура заполняется уровнем (если нет, будет виден фон)
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // Фоновый серый цвет. Для теста, полностью ли текстура заполняется уровнем (если нет, будет виден фон)
         glClear(GL_COLOR_BUFFER_BIT);			// Clear Screen And Depth Buffer on the fbo to red
         glLoadIdentity();
         glBindTexture(GL_TEXTURE_2D, 0);
-        
+
         Texture texture = new Texture(textureID);
         texture.setWidth(width);
         texture.setHeight(height);
@@ -180,16 +197,6 @@ public class OpenGLManager implements GraphicManager {
             return (Sys.getTime() * 1000) / Sys.getTimerResolution();
         }
     }
-
-    private boolean fullscreen = false;
-    private int width = 640;
-    private int height = 480;
-    private boolean vSync = false;
-    private int fps = 60;
-    private boolean mouseGrabbed = false;
-    private String title = "Program";
-    private GraphicScene scene = null;
-    private ListeningThread listeningThread = null;
 
     public OpenGLManager() {
     }
