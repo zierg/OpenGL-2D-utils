@@ -30,8 +30,8 @@ public class Test {
         gm.init();
         Texture t1 = gm.createTexture("grounds.png", "PNG");
         Texture t2 = gm.createTexture("ship.png", "PNG");
-        Texture t3 = gm.createTexture(50, 40);
-        //gm.drawTexture(t2, 20, 20, t3);
+        Texture t3 = gm.createTexture(120, 80);
+        gm.drawTexture(t2, 20, 20, t3);
         //gm.drawTexture(t2, 20, 20, t1);
         //GL11.glScalef(2, 2, 2);
         while (!Display.isCloseRequested()) {
@@ -39,7 +39,7 @@ public class Test {
 
             glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
             glClear(GL_COLOR_BUFFER_BIT);
-            gm.drawTexture(t1, 0, 0,64,64,192,192);
+            gm.drawTexture(t3, 0, 0,20,20,100,80);
             //glDisable(GL_TEXTURE_2D);
             Display.update();
             Display.sync(100);

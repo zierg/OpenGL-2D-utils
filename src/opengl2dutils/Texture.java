@@ -12,11 +12,13 @@ package opengl2dutils;
  */
 public class Texture {
     private final int id;
-    private int width;
-    private int height;
+    private final int width;
+    private final int height;
     
-    public Texture(int id) {
+    public Texture(int id, int width, int height) {
         this.id = id;
+        this.width = width;
+        this.height = height;
     }
 
     int getId() {
@@ -31,23 +33,9 @@ public class Texture {
     }
 
     /**
-     * @param width the width to set
-     */
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    /**
      * @return the height
      */
     public int getHeight() {
         return height;
-    }
-
-    /**
-     * @param height the height to set
-     */
-    public void setHeight(int height) {
-        this.height = height;
     }
 }

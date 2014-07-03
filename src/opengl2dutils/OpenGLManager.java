@@ -43,27 +43,27 @@ public class OpenGLManager implements GraphicManager {
     public void drawTexture(Texture texture, float x, float y) {
         drawTexture(texture, x, y, 0, 0, texture.getWidth(), texture.getHeight());
         /*glEnable(GL_TEXTURE_2D);
-        glColor3f(1, 1, 1);
-        glViewport(0, 0, width, height);
-        glScalef(1.0f, 1.0f, 1.0f);
-        int textWidth = texture.getWidth();
-        int textHeight = texture.getHeight();
-        // System.out.println("textWidth = " + textWidth + ", textHeight = " + textHeight);
-        glBindTexture(GL_TEXTURE_2D, texture.getId());
-        glBegin(GL_QUADS);
-        {
-            glTexCoord2f(0, 0);
-            glVertex2f(x, y);
-            glTexCoord2f(1, 0);
-            glVertex2f((x + textWidth), y);
-            glTexCoord2f(1, 1);
-            glVertex2f((x + textWidth), (y + textHeight));
-            glTexCoord2f(0, 1);
-            glVertex2f(x, (y + textHeight));
-        }
-        glEnd();
-        glDisable(GL_QUADS);
-        glBindTexture(GL_TEXTURE_2D, 0);*/
+         glColor3f(1, 1, 1);
+         glViewport(0, 0, width, height);
+         glScalef(1.0f, 1.0f, 1.0f);
+         int textWidth = texture.getWidth();
+         int textHeight = texture.getHeight();
+         // System.out.println("textWidth = " + textWidth + ", textHeight = " + textHeight);
+         glBindTexture(GL_TEXTURE_2D, texture.getId());
+         glBegin(GL_QUADS);
+         {
+         glTexCoord2f(0, 0);
+         glVertex2f(x, y);
+         glTexCoord2f(1, 0);
+         glVertex2f((x + textWidth), y);
+         glTexCoord2f(1, 1);
+         glVertex2f((x + textWidth), (y + textHeight));
+         glTexCoord2f(0, 1);
+         glVertex2f(x, (y + textHeight));
+         }
+         glEnd();
+         glDisable(GL_QUADS);
+         glBindTexture(GL_TEXTURE_2D, 0);*/
     }
 
     @Override
@@ -128,12 +128,12 @@ public class OpenGLManager implements GraphicManager {
         int textWidth = texture.getWidth();
         int textHeight = texture.getHeight();
         glBindTexture(GL_TEXTURE_2D, texture.getId());
-        float xBegin = fromX/textWidth;
-        float yBegin = fromY/textHeight;
-        float xEnd = toX/textWidth;
-        float yEnd = toY/textHeight;
-        textWidth=(int)(toX-fromX);
-        textHeight=(int)(toY-fromY);
+        float xBegin = fromX / textWidth;
+        float yBegin = fromY / textHeight;
+        float xEnd = toX / textWidth;
+        float yEnd = toY / textHeight;
+        textWidth = (int) (toX - fromX);
+        textHeight = (int) (toY - fromY);
         glBegin(GL_QUADS);
         {
             glTexCoord2f(xBegin, yBegin);
@@ -168,9 +168,7 @@ public class OpenGLManager implements GraphicManager {
         glLoadIdentity();
         glBindTexture(GL_TEXTURE_2D, 0);
 
-        Texture texture = new Texture(textureID);
-        texture.setWidth(width);
-        texture.setHeight(height);
+        Texture texture = new Texture(textureID, width, height);
         return texture;
     }
 
@@ -178,9 +176,7 @@ public class OpenGLManager implements GraphicManager {
     public Texture createTexture(String filePath, String type) {
         try {
             org.newdawn.slick.opengl.Texture tex = TextureLoader.getTexture(type, ResourceLoader.getResourceAsStream(filePath));
-            Texture texture = new Texture(tex.getTextureID());
-            texture.setHeight(tex.getTextureHeight());
-            texture.setWidth(tex.getTextureWidth());
+            Texture texture = new Texture(tex.getTextureID(), tex.getTextureWidth(),tex.getTextureHeight());
             return texture;
         } catch (IOException ex) {
             throw new RuntimeException(ex);
