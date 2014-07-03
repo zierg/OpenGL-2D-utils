@@ -42,81 +42,11 @@ public class OpenGLManager implements GraphicManager {
     @Override
     public void drawTexture(Texture texture, float x, float y) {
         drawTexture(texture, x, y, 0, 0, texture.getWidth(), texture.getHeight());
-        /*glEnable(GL_TEXTURE_2D);
-         glColor3f(1, 1, 1);
-         glViewport(0, 0, width, height);
-         glScalef(1.0f, 1.0f, 1.0f);
-         int textWidth = texture.getWidth();
-         int textHeight = texture.getHeight();
-         // System.out.println("textWidth = " + textWidth + ", textHeight = " + textHeight);
-         glBindTexture(GL_TEXTURE_2D, texture.getId());
-         glBegin(GL_QUADS);
-         {
-         glTexCoord2f(0, 0);
-         glVertex2f(x, y);
-         glTexCoord2f(1, 0);
-         glVertex2f((x + textWidth), y);
-         glTexCoord2f(1, 1);
-         glVertex2f((x + textWidth), (y + textHeight));
-         glTexCoord2f(0, 1);
-         glVertex2f(x, (y + textHeight));
-         }
-         glEnd();
-         glDisable(GL_QUADS);
-         glBindTexture(GL_TEXTURE_2D, 0);*/
     }
 
     @Override
     public void drawTexture(Texture texture, float x, float y, Texture target) {
-        int framebufferID;
-        int textureID = texture.getId();
-        int targetID = target.getId();
-        if (!framebuffers.containsKey(targetID)) {
-            framebufferID = glGenFramebuffersEXT();
-            framebuffers.put(targetID, framebufferID);
-            glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebufferID);
-            glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, targetID, 0);
-        } else {
-            framebufferID = framebuffers.get(targetID);
-            glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebufferID);
-        }
-
-        glEnable(GL_TEXTURE_2D);
-        glColor3f(1, 1, 1);
-
-        glBindTexture(GL_TEXTURE_2D, textureID);
-        glViewport(0, 0, target.getWidth(), target.getHeight());
-
-        float w = target.getWidth();
-        float www = width;
-        float h = target.getHeight();
-        float hhh = height;
-        glScalef(www / w, hhh / h, 1.0f);
-        //glScalef(width / target.getWidth(), height / target.getHeight(), 1.0f);
-
-        final int yOffset = 0;//height - target.getHeight();
-        int textWidth = texture.getWidth();
-        int textHeight = texture.getHeight();
-
-        glBegin(GL_QUADS);
-        {
-            glTexCoord2f(0, 0);
-            glVertex2f(x, target.getHeight() - y - yOffset);
-            glTexCoord2f(1, 0);
-            glVertex2f((x + textWidth), target.getHeight() - y - yOffset);
-            glTexCoord2f(1, 1);
-            glVertex2f((x + textWidth), target.getHeight() - (y + textHeight) - yOffset);
-            glTexCoord2f(0, 1);
-            glVertex2f(x, target.getHeight() - (y + textHeight) - yOffset);
-        }
-        glEnd();
-        glScalef(w / www, h / hhh, 1.0f);//glScalef(1.0f, 1.0f, 1.0f); // Меняем масштаб обратно
-        glDisable(GL_QUADS);
-        glBindTexture(GL_TEXTURE_2D, 0);
-
-        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-        glViewport(0, 0, width, height);
-
+        drawTexture(texture, x, y, 0, 0, texture.getWidth(), texture.getHeight(), target);
     }
 
     @Override
@@ -152,7 +82,60 @@ public class OpenGLManager implements GraphicManager {
 
     @Override
     public void drawTexture(Texture texture, float x, float y, float fromX, float fromY, float toX, float toY, Texture target) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int framebufferID;
+        int textureID = texture.getId();
+        int targetID = target.getId();
+        if (!framebuffers.containsKey(targetID)) {      // Если не было фреймбуфера, создаём
+            framebufferID = glGenFramebuffersEXT();     // и привязываем к нему текстуру,
+            framebuffers.put(targetID, framebufferID);  // иначе используем имеющийся
+            glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebufferID);
+            glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, targetID, 0);
+        } else {
+            framebufferID = framebuffers.get(targetID);
+            glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebufferID);
+        }
+
+        glEnable(GL_TEXTURE_2D);
+        glColor3f(1, 1, 1);
+
+        glBindTexture(GL_TEXTURE_2D, textureID);
+        
+        glViewport(0, 0, target.getWidth(), target.getHeight());
+
+        float floatTargetWidth = target.getWidth();
+        float floatWidth = width;
+        float floatTargetGeight = target.getHeight();
+        float floatheight = height;
+        glScalef(floatWidth / floatTargetWidth, floatheight / floatTargetGeight, 1.0f);
+
+        final int yOffset = 0;
+        int textWidth = texture.getWidth();
+        int textHeight = texture.getHeight();
+        float xBegin = fromX / textWidth;
+        float yBegin = fromY / textHeight;
+        float xEnd = toX / textWidth;
+        float yEnd = toY / textHeight;
+        textWidth = (int) (toX - fromX);
+        textHeight = (int) (toY - fromY);
+
+        glBegin(GL_QUADS);
+        {
+            glTexCoord2f(xBegin, yBegin);
+            glVertex2f(x, target.getHeight() - y - yOffset);
+            glTexCoord2f(xEnd, yBegin);
+            glVertex2f((x + textWidth), target.getHeight() - y - yOffset);
+            glTexCoord2f(xEnd, yEnd);
+            glVertex2f((x + textWidth), target.getHeight() - (y + textHeight) - yOffset);
+            glTexCoord2f(xBegin, yEnd);
+            glVertex2f(x, target.getHeight() - (y + textHeight) - yOffset);
+        }
+        glEnd();
+        glScalef(floatTargetWidth / floatWidth, floatTargetGeight / floatheight, 1.0f);//glScalef(1.0f, 1.0f, 1.0f); // Меняем масштаб обратно
+        glDisable(GL_QUADS);
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+        glViewport(0, 0, width, height);
     }
 
     @Override
