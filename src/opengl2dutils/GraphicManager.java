@@ -32,6 +32,10 @@ public interface GraphicManager {
     
     void drawTexture(Texture texture, float x, float y);
     void drawTexture(Texture texture, float x, float y, Texture target);
+    void drawTexture(Texture texture, float x, float y, float width, float height);
+    void drawTexture(Texture texture, float x, float y, float width, float height, Texture target);
     void drawTexture(Texture texture, float x, float y, float fromX, float fromY, float toX, float toY);
     void drawTexture(Texture texture, float x, float y, float fromX, float fromY, float toX, float toY, Texture target);
+    void drawTexture(Texture texture, float x, float y, float width, float height, float fromX, float fromY, float toX, float toY);
+    void drawTexture(Texture texture, float x, float y, float width, float height, float fromX, float fromY, float toX, float toY, Texture target);
 }

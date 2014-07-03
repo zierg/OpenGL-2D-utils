@@ -30,10 +30,12 @@ public class Test {
         gm.init();
         Texture t1 = gm.createTexture("grounds.png", "PNG");
         Texture t2 = gm.createTexture("ship.png", "PNG");
-        Texture t3 = gm.createTexture(120, 80);
+        Texture t3 = gm.createTexture(500, 500);
         //gm.drawTexture(t2, 20, 20, t3);
-        gm.drawTexture(t2, 30, 00, t1);
-        gm.drawTexture(t2, 190, 83, t1);
+        /*gm.drawTexture(t2, 30, 00, t3);
+        gm.drawTexture(t2, 190, 83, t3);*/
+        gm.drawTexture(t2, 0, 0, 128,64,0,0,500,200,t3);
+        gm.drawTexture(t3,0, 0,t1);
         //GL11.glScalef(2, 2, 2);
         while (!Display.isCloseRequested()) {
             //glEnable(GL_TEXTURE_2D);
