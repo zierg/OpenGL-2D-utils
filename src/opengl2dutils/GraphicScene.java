@@ -13,5 +13,6 @@ package opengl2dutils;
 public interface GraphicScene {
     void listenKeyboard();
     void listenMouse();
+    void makeChanges();
     void render();
 }

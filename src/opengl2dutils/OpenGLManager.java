@@ -26,7 +26,7 @@ import org.newdawn.slick.opengl.TextureImpl;
  *
  * @author ivko0314
  */
-public class OpenGLManager implements GraphicManager {
+public class OpenGLManager {
 
     private boolean isListening = false;
     private int listeningInterval = 10;
@@ -79,14 +79,12 @@ public class OpenGLManager implements GraphicManager {
     public OpenGLManager() {
     }
     
-    @Override
     public void drawTexture(Texture texture, float x, float y) {
         int textWidth = texture.getWidth();
         int textHeight = texture.getHeight();
         drawTexture(texture, x, y, textWidth, textHeight, 0, 0, textWidth, textHeight);
     }
 
-    @Override
     public void drawTexture(Texture texture, float x, float y, Texture target) {
         int textWidth = texture.getWidth();
         int textHeight = texture.getHeight();
@@ -94,17 +92,14 @@ public class OpenGLManager implements GraphicManager {
         drawTexture(texture, x, y, textWidth, textHeight, 0, 0, textWidth, textHeight, target);
     }
 
-    @Override
     public void drawTexture(Texture texture, float x, float y, float fromX, float fromY, float toX, float toY) {
         drawTexture(texture, x, y, texture.getWidth(), texture.getHeight(), fromX, fromY, toX, toY);
     }
 
-    @Override
     public void drawTexture(Texture texture, float x, float y, float fromX, float fromY, float toX, float toY, Texture target) {
         drawTexture(texture, x, y, texture.getWidth(), texture.getHeight(), fromX, fromY, toX, toY, target);
     }
 
-    @Override
     public Texture createTexture(int width, int height) {
         int textureID = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, textureID);									// Bind the colorbuffer texture
@@ -121,7 +116,6 @@ public class OpenGLManager implements GraphicManager {
         return texture;
     }
 
-    @Override
     public Texture createTexture(String filePath, String type) {
         try {
             org.newdawn.slick.opengl.Texture tex = TextureLoader.getTexture(type, ResourceLoader.getResourceAsStream(filePath));
@@ -139,23 +133,19 @@ public class OpenGLManager implements GraphicManager {
         }
     }
 
-    @Override
     public void deleteTexture(Texture texture) {
         glDeleteTextures(texture.getId());
     }
 
-    @Override
     public void drawTexture(Texture texture, float x, float y, float width, float height) {
         drawTexture(texture, x, y, width, height, 0, 0, width, height);
     }
 
-    @Override
     public void drawTexture(Texture texture, float x, float y, float width, float height, Texture target) {
         System.out.println("with wh. width = " + width + ", height = " + height);
         drawTexture(texture, x, y, width, height, 0, 0, width, height, target);
     }
 
-    @Override
     public void drawTexture(Texture texture, float x, float y, float width, float height, float fromX, float fromY, float toX, float toY) {
         glEnable(GL_TEXTURE_2D);
         glColor3f(1, 1, 1);
@@ -185,7 +175,6 @@ public class OpenGLManager implements GraphicManager {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    @Override
     public void drawTexture(Texture texture, float x, float y, float width, float height, float fromX, float fromY, float toX, float toY, Texture target) {
         int framebufferID;
         int textureID = texture.getId();
@@ -241,7 +230,6 @@ public class OpenGLManager implements GraphicManager {
         glViewport(0, 0, this.width, this.height);
     }
 
-    @Override
     public void init() {
         try {
             setDisplayMode(width, height, fullscreen);
@@ -264,72 +252,60 @@ public class OpenGLManager implements GraphicManager {
         Mouse.setGrabbed(mouseGrabbed); // Захватываем мышь.
     }
 
-    @Override
     public void initWithCustomConfiguration(GraphicConfigurator configurator) {
         configurator.configure();
     }
 
-    @Override
-    public GraphicManager setScreenWidth(int width) {
+    public OpenGLManager setScreenWidth(int width) {
         this.width = width;
         return this;
     }
 
-    @Override
-    public GraphicManager setScreenHeight(int height) {
+    public OpenGLManager setScreenHeight(int height) {
         this.height = height;
         return this;
     }
 
-    @Override
-    public GraphicManager setFullscreen(boolean fullscreen) {
+    public OpenGLManager setFullscreen(boolean fullscreen) {
         this.fullscreen = fullscreen;
         return this;
     }
 
-    @Override
-    public GraphicManager setFPS(int fps) {
+    public OpenGLManager setFPS(int fps) {
         this.fps = fps;
         return this;
     }
 
-    @Override
-    public GraphicManager setVSync(boolean vSync) {
+    public OpenGLManager setVSync(boolean vSync) {
         this.vSync = vSync;
         return this;
     }
 
-    @Override
     public void renderScene() {
         scene.render();
         Display.update();
         Display.sync(fps);
     }
 
-    @Override
-    public GraphicManager setMouseGrabbed(boolean grabbed) {
+    public OpenGLManager setMouseGrabbed(boolean grabbed) {
         mouseGrabbed = grabbed;
         return this;
     }
 
-    @Override
-    public GraphicManager setWindowTitle(String title) {
+    public OpenGLManager setWindowTitle(String title) {
         this.title = title;
         return this;
     }
 
-    @Override
     public void destroy() {
         Display.destroy();
     }
 
-    @Override
     public void setScene(GraphicScene scene) {
         this.scene = scene;
     }
 
-    @Override
-    public GraphicManager setListeningInterval(int interval) {
+    public OpenGLManager setListeningInterval(int interval) {
         listeningInterval = interval;
         return this;
     }
@@ -395,7 +371,6 @@ public class OpenGLManager implements GraphicManager {
         }
     }
 
-    @Override
     public void startListeningThread() {
         if (isListening) {
             return;
@@ -406,7 +381,6 @@ public class OpenGLManager implements GraphicManager {
         }
     }
 
-    @Override
     public void stopListeningThread() {
         if (!isListening) {
             return;

@@ -25,7 +25,7 @@ public class Test {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
-        GraphicManager gm = new OpenGLManager();
+        OpenGLManager gm = new OpenGLManager();
         gm.setFPS(100).setFullscreen(false).setMouseGrabbed(false).setWindowTitle("asd");
         gm.init();
         Texture t1 = gm.createTexture("grounds.png", "PNG");
@@ -34,7 +34,7 @@ public class Test {
         //gm.drawTexture(t2, 20, 20, t3);
         /*gm.drawTexture(t2, 30, 00, t3);
         gm.drawTexture(t2, 190, 83, t3);*/
-        gm.drawTexture(t2, 0, 0, 128,64,0,0,500,200,t3);
+        gm.drawTexture(t2, 0, 0, 128,64,0,0,t2.getWidth(),t2.getHeight(), t3);
         gm.drawTexture(t3,0, 0,t1);
         //GL11.glScalef(2, 2, 2);
         while (!Display.isCloseRequested()) {
@@ -47,6 +47,7 @@ public class Test {
             Display.update();
             Display.sync(100);
         }
+        gm.destroy();
     }
 
 }
