@@ -522,4 +522,12 @@ public class OpenGLManager {
     public void setCursor(Texture cursor) {
         this.cursor = cursor;
     }
+    
+    int getWidth() {
+        return width;
+    }
+    
+    int getHeight() {
+        return height;
+    }
 }

@@ -79,14 +79,36 @@ public class CompositeTexture {
     }
 
     void draw(float x, float y) {
+        int width = gm.getWidth();
+        int height = gm.getHeight();
         for (TextureInfo t : textures) {
-            gm.drawTexture(t.texture, x + t.x, y + t.y, t.width, t.height, t.fromX, t.fromY, t.toX, t.toY);
+            x+=t.x;
+            y+=t.y;
+            if (!(
+                    (x + t.width < 0) ||
+                    (x > width) ||
+                    (y + t.height < 0) ||
+                    (y > height)
+                    )) {
+                gm.drawTexture(t.texture, x, y, t.width, t.height, t.fromX, t.fromY, t.toX, t.toY);
+            }
         }
     }
 
     void draw(float x, float y, Texture target) {
+        int width = target.getWidth();
+        int height = target.getHeight();
         for (TextureInfo t : textures) {
-            gm.drawTexture(t.texture, x + t.x, y + t.y, t.width, t.height, t.fromX, t.fromY, t.toX, t.toY, target);
+            x+=t.x;
+            y+=t.y;
+            if (!(
+                    (x + t.width < 0) ||
+                    (x > width) ||
+                    (y + t.height < 0) ||
+                    (y > height)
+                    )) {
+                gm.drawTexture(t.texture, x, y, t.width, t.height, t.fromX, t.fromY, t.toX, t.toY, target);
+            }
         }
     }
 }
