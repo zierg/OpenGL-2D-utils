@@ -23,10 +23,8 @@ public class CompositeTextureTestScene implements GraphicScene {
         texture = gm.createCompositeTexture();
         Texture t1 = gm.createTexture("grounds.png", "PNG");
         Texture t2 = gm.createTexture("ship.png", "PNG");
-        Texture t3 = gm.createTexture(500, 500);
-        gm.drawTexture(t2, 50, 50, 128, 64, 0, 0, t2.getWidth()-80, t2.getHeight(), t3);
-        gm.drawTexture(t3, 0, 0, t1);
-        texture.addTexture(t1, 0, 0);
+        gm.drawTexture(t1, 0, 0, texture);
+        gm.drawTexture(t2, 50, 50, 128, 64, 0, 0, t2.getWidth()-80, t2.getHeight(), texture);
     }
 
     @Override
@@ -46,7 +44,7 @@ public class CompositeTextureTestScene implements GraphicScene {
 
     @Override
     public void render() {
-        gm.drawCompositeTexture(texture, 50, 50);
+        gm.drawTexture(texture, 50, 50);
     }
     
 }

@@ -142,11 +142,23 @@ public class OpenGLManager {
         return new CompositeTexture(this);
     }
     
-    public void drawCompositeTexture(CompositeTexture texture, float x, float y) {
+    public void drawTexture(CompositeTexture texture, float x, float y) {
         texture.draw(x, y);
     }
     
-    public void drawCompositeTexture(CompositeTexture texture, float x, float y, Texture target) {
+    public void drawTexture(Texture texture, float x, float y, CompositeTexture target) {
+        target.addTexture(texture, x, y);
+    }
+    
+    public void drawTexture(Texture texture, float x, float y, float width, float height, CompositeTexture target) {
+        target.addTexture(texture, x, y, width, height);
+    }
+    
+    public void drawTexture(Texture texture, float x, float y, float width, float height, float fromX, float fromY, float toX, float toY, CompositeTexture target) {
+        target.addTexture(texture, x, y, width, height, fromX, fromY, toX, toY);
+    }
+    
+    public void drawTexture(CompositeTexture texture, float x, float y, Texture target) {
         texture.draw(x, y, target);
     }
 

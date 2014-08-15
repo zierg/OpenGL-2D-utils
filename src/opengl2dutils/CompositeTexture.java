@@ -66,15 +66,15 @@ public class CompositeTexture {
         textures.clear();
     }
     
-    public void addTexture(Texture texture, float x, float y) {
+    void addTexture(Texture texture, float x, float y) {
         textures.add(new TextureInfo(texture, x, y));
     }
     
-    public void addTexture(Texture texture, float x, float y, float width, float height) {
+    void addTexture(Texture texture, float x, float y, float width, float height) {
         textures.add(new TextureInfo(texture, x, y, width, height));
     }
     
-    public void addTexture(Texture texture, float x, float y, float width, float height, float fromX, float fromY, float toX, float toY) {
+    void addTexture(Texture texture, float x, float y, float width, float height, float fromX, float fromY, float toX, float toY) {
         textures.add(new TextureInfo(texture, x, y, width, height, fromX, fromY, toX, toY));
     }
 
