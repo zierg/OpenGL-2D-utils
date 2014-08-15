@@ -137,6 +137,18 @@ public class OpenGLManager {
             throw new RuntimeException(ex);
         }
     }
+    
+    public CompositeTexture createCompositeTexture() {
+        return new CompositeTexture(this);
+    }
+    
+    public void drawCompositeTexture(CompositeTexture texture, float x, float y) {
+        texture.draw(x, y);
+    }
+    
+    public void drawCompositeTexture(CompositeTexture texture, float x, float y, Texture target) {
+        texture.draw(x, y, target);
+    }
 
     public void deleteTexture(Texture texture) {
         if (texture == null) {

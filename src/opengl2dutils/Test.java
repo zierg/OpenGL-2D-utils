@@ -6,15 +6,9 @@
 package opengl2dutils;
 
 import java.io.IOException;
+import opengl2dutils.test.CompositeTextureTestScene;
 import opengl2dutils.test.TestScene2;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
 
 /**
  *
@@ -29,7 +23,17 @@ public class Test {
         OpenGLManager gm = new OpenGLManager();
         gm.setFPS(100).setFullscreen(false).setMouseGrabbed(true).setWindowTitle("Test");
         gm.init();
-        gm.setScene(new TestScene2(gm));
+        
+        Texture cursor = gm.createTexture(10, 10);
+        gm.drawQuad(4, 10, 0, 0, 0, 0, 0, cursor);
+        gm.drawQuad(10, 4, 0, 0, 0, 0, 0, cursor);
+        gm.drawQuad(4, 10, 6, 0, 0, 0, 0, cursor);
+        gm.drawQuad(2, 8, 1, 1, 255, 255, 255, cursor);
+        gm.drawQuad(8, 2, 1, 1, 255, 255, 255, cursor);
+        gm.drawQuad(2, 8, 7, 1, 255, 255, 255, cursor);
+        gm.setCursor(cursor);
+        //gm.setScene(new TestScene2(gm));
+        gm.setScene(new CompositeTextureTestScene(gm));
         while (!Display.isCloseRequested()) {
             gm.renderScene();
         }
