@@ -6,7 +6,6 @@
 package opengl2dutils;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import org.lwjgl.LWJGLException;
@@ -18,9 +17,6 @@ import static org.lwjgl.opengl.EXTFramebufferObject.*;
 import static org.lwjgl.opengl.GL11.*;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
-import org.lwjgl.BufferUtils;
-import static org.lwjgl.util.glu.GLU.gluBuild2DMipmaps;
-import org.newdawn.slick.opengl.TextureImpl;
 
 /**
  *
@@ -61,6 +57,7 @@ public class OpenGLManager {
                 if (time - lastTime >= listeningInterval) {
                     scene.listenMouse();
                     scene.listenKeyboard();
+                    scene.makeChanges();
                     lastTime = time;
                 }
             }
@@ -78,7 +75,7 @@ public class OpenGLManager {
 
     public OpenGLManager() {
     }
-    
+
     public void drawTexture(Texture texture, float x, float y) {
         int textWidth = texture.getWidth();
         int textHeight = texture.getHeight();
@@ -120,11 +117,6 @@ public class OpenGLManager {
         try {
             org.newdawn.slick.opengl.Texture tex = TextureLoader.getTexture(type, ResourceLoader.getResourceAsStream(filePath));
             glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-            //glBindTexture(GL_TEXTURE_2D, tex.getTextureID());
-            
-            //new TextureImpl(type, height, width);
-            /*glMatrixMode(GL_MODELVIEW);	
-            glLoadIdentity();*/
             glBindTexture(GL_TEXTURE_2D, 0);
             Texture texture = new Texture(tex.getTextureID(), tex.getTextureWidth(), tex.getTextureHeight());
             return texture;
@@ -158,7 +150,6 @@ public class OpenGLManager {
         float yEnd = toY / height;
         width = (toX - fromX);
         height = (toY - fromY);
-        //System.out.println("width = " + width + ", height = " + height);
         glBegin(GL_QUADS);
         {
             glTexCoord2f(xBegin, yBegin);
@@ -228,6 +219,85 @@ public class OpenGLManager {
 
         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
         glViewport(0, 0, this.width, this.height);
+    }
+
+    public void drawQuad(int quadWidth, int quadHeight, float x, float y, int red, int green, int blue) {
+        final float COLOR_MAX = 255;
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glEnable(GL_TEXTURE_2D);
+        glViewport(0, 0, this.width, this.height);
+        glScalef(1.0f, 1.0f, 1.0f);
+        glColor3f((float) red / COLOR_MAX, (float) green / COLOR_MAX, (float) blue / COLOR_MAX);
+        glBegin(GL_QUADS);
+        {
+            glVertex2f(x, /*height - */y);
+            glVertex2f(x + quadWidth, /*height - */y);
+            glVertex2f(x + quadWidth, /*height - */(y + quadHeight));
+            glVertex2f(x, /*height - */(y + quadHeight));
+        }
+        glEnd();
+        glDisable(GL_QUADS);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+    
+    public void drawQuad(int quadWidth, int quadHeight, float x, float y, RGBColor color) {
+        drawQuad(quadWidth, quadHeight, x, y, color.getRed(), color.getGreen(), color.getBlue());
+    }
+    
+    public void drawQuad(int quadWidth, int quadHeight, float x, float y, int red, int green, int blue, Texture target) {
+        final float COLOR_MAX = 255;
+        int framebufferID;
+        int targetID = target.getId();
+        if (!framebuffers.containsKey(targetID)) {      // Если не было фреймбуфера, создаём
+            framebufferID = glGenFramebuffersEXT();     // и привязываем к нему текстуру,
+            framebuffers.put(targetID, framebufferID);  // иначе используем имеющийся
+            glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebufferID);
+            glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, targetID, 0);
+        } else {
+            framebufferID = framebuffers.get(targetID);
+            glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebufferID);
+        }
+
+        glEnable(GL_TEXTURE_2D);
+        glColor3f(1, 1, 1);
+
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        glViewport(0, 0, target.getWidth(), target.getHeight());
+
+        float floatTargetWidth = target.getWidth();
+        float floatWidth = this.width;
+        float floatTargetHeight = target.getHeight();
+        float floatHeight = this.height;
+        glScalef(floatWidth / floatTargetWidth, floatHeight / floatTargetHeight, 1.0f);
+
+        final int yOffset = 0;
+        float scaleX = floatTargetWidth / floatWidth; // ???????
+        float scaleY = floatTargetHeight / floatHeight; // ???????
+        
+        glEnable(GL_TEXTURE_2D);
+        glViewport(0, 0, this.width, this.height);
+
+        glColor3f((float) red / COLOR_MAX, (float) green / COLOR_MAX, (float) blue / COLOR_MAX);
+        glBegin(GL_QUADS);
+        {
+            glVertex2f(x*scaleX, target.getHeight() - (y - yOffset)*scaleY); // ???????
+            glVertex2f((x + quadWidth)*scaleX, target.getHeight() - (y - yOffset)*scaleY); // ???????
+            glVertex2f((x + quadWidth)*scaleX, target.getHeight() - ((y + quadHeight) - yOffset)*scaleY); // ???????
+            glVertex2f(x*scaleX, target.getHeight() - ((y + quadHeight) - yOffset)*scaleY); // ???????
+        }
+        glEnd();
+        
+        glScalef(floatTargetWidth / floatWidth, floatTargetHeight / floatHeight, 1.0f);//glScalef(1.0f, 1.0f, 1.0f); // Меняем масштаб обратно
+        glDisable(GL_QUADS);
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+        glViewport(0, 0, this.width, this.height);
+    }
+    
+    public void drawQuad(int quadWidth, int quadHeight, float x, float y, RGBColor color, Texture target) {
+        drawQuad(quadWidth, quadHeight, x, y, color.getRed(), color.getGreen(), color.getBlue(), target);
     }
 
     public void init() {
