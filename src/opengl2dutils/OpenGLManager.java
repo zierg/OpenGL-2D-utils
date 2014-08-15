@@ -193,12 +193,12 @@ public class OpenGLManager {
         glViewport(0, 0, this.width, this.height);
         glScalef(1.0f, 1.0f, 1.0f);
         glBindTexture(GL_TEXTURE_2D, texture.getId());
-        float xBegin = fromX / width;
-        float yBegin = fromY / height;
-        float xEnd = toX / width;
-        float yEnd = toY / height;
-        width = (toX - fromX);
-        height = (toY - fromY);
+        float textureWidth = texture.getWidth();
+        float textureHeight = texture.getHeight();
+        float xBegin = fromX / textureWidth;
+        float yBegin = fromY / textureHeight;
+        float xEnd = toX / textureWidth;
+        float yEnd = toY / textureHeight;
         glBegin(GL_QUADS);
         {
             glTexCoord2f(xBegin, yBegin);
@@ -252,8 +252,6 @@ public class OpenGLManager {
         float yBegin = fromY / textureHeight;
         float xEnd = toX / textureWidth;
         float yEnd = toY / textureHeight;
-        width = toX - fromX;
-        height = (toY - fromY);
 
         glBegin(GL_QUADS);
         {
