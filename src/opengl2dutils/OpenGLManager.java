@@ -24,6 +24,8 @@ import org.newdawn.slick.util.ResourceLoader;
  */
 public class OpenGLManager {
 
+    private Texture cursor;
+
     private boolean isListening = false;
     private int listeningInterval = 10;
 
@@ -77,23 +79,34 @@ public class OpenGLManager {
     }
 
     public void drawTexture(Texture texture, float x, float y) {
+        if (texture == null) {
+            return;
+        }
         int textWidth = texture.getWidth();
         int textHeight = texture.getHeight();
         drawTexture(texture, x, y, textWidth, textHeight, 0, 0, textWidth, textHeight);
     }
 
     public void drawTexture(Texture texture, float x, float y, Texture target) {
+        if (texture == null || target == null) {
+            return;
+        }
         int textWidth = texture.getWidth();
         int textHeight = texture.getHeight();
-        System.out.println("without wh. width = " + textWidth + ", height = " + textHeight);
         drawTexture(texture, x, y, textWidth, textHeight, 0, 0, textWidth, textHeight, target);
     }
 
     public void drawTexture(Texture texture, float x, float y, float fromX, float fromY, float toX, float toY) {
+        if (texture == null) {
+            return;
+        }
         drawTexture(texture, x, y, texture.getWidth(), texture.getHeight(), fromX, fromY, toX, toY);
     }
 
     public void drawTexture(Texture texture, float x, float y, float fromX, float fromY, float toX, float toY, Texture target) {
+        if (texture == null || target == null) {
+            return;
+        }
         drawTexture(texture, x, y, texture.getWidth(), texture.getHeight(), fromX, fromY, toX, toY, target);
     }
 
@@ -126,19 +139,31 @@ public class OpenGLManager {
     }
 
     public void deleteTexture(Texture texture) {
+        if (texture == null) {
+            return;
+        }
         glDeleteTextures(texture.getId());
     }
 
     public void drawTexture(Texture texture, float x, float y, float width, float height) {
+        if (texture == null) {
+            return;
+        }
         drawTexture(texture, x, y, width, height, 0, 0, width, height);
     }
 
     public void drawTexture(Texture texture, float x, float y, float width, float height, Texture target) {
+        if (texture == null || target == null) {
+            return;
+        }
         System.out.println("with wh. width = " + width + ", height = " + height);
         drawTexture(texture, x, y, width, height, 0, 0, width, height, target);
     }
 
     public void drawTexture(Texture texture, float x, float y, float width, float height, float fromX, float fromY, float toX, float toY) {
+        if (texture == null) {
+            return;
+        }
         glEnable(GL_TEXTURE_2D);
         glColor3f(1, 1, 1);
         glViewport(0, 0, this.width, this.height);
@@ -167,6 +192,9 @@ public class OpenGLManager {
     }
 
     public void drawTexture(Texture texture, float x, float y, float width, float height, float fromX, float fromY, float toX, float toY, Texture target) {
+        if (texture == null || target == null) {
+            return;
+        }
         int framebufferID;
         int textureID = texture.getId();
         int targetID = target.getId();
@@ -230,21 +258,24 @@ public class OpenGLManager {
         glColor3f((float) red / COLOR_MAX, (float) green / COLOR_MAX, (float) blue / COLOR_MAX);
         glBegin(GL_QUADS);
         {
-            glVertex2f(x, /*height - */y);
-            glVertex2f(x + quadWidth, /*height - */y);
-            glVertex2f(x + quadWidth, /*height - */(y + quadHeight));
-            glVertex2f(x, /*height - */(y + quadHeight));
+            glVertex2f(x, /*height - */ y);
+            glVertex2f(x + quadWidth, /*height - */ y);
+            glVertex2f(x + quadWidth, /*height - */ (y + quadHeight));
+            glVertex2f(x, /*height - */ (y + quadHeight));
         }
         glEnd();
         glDisable(GL_QUADS);
         glBindTexture(GL_TEXTURE_2D, 0);
     }
-    
+
     public void drawQuad(int quadWidth, int quadHeight, float x, float y, RGBColor color) {
         drawQuad(quadWidth, quadHeight, x, y, color.getRed(), color.getGreen(), color.getBlue());
     }
-    
+
     public void drawQuad(int quadWidth, int quadHeight, float x, float y, int red, int green, int blue, Texture target) {
+        if (target == null) {
+            return;
+        }
         final float COLOR_MAX = 255;
         int framebufferID;
         int targetID = target.getId();
@@ -274,20 +305,20 @@ public class OpenGLManager {
         final int yOffset = 0;
         float scaleX = floatTargetWidth / floatWidth; // ???????
         float scaleY = floatTargetHeight / floatHeight; // ???????
-        
+
         glEnable(GL_TEXTURE_2D);
         glViewport(0, 0, this.width, this.height);
 
         glColor3f((float) red / COLOR_MAX, (float) green / COLOR_MAX, (float) blue / COLOR_MAX);
         glBegin(GL_QUADS);
         {
-            glVertex2f(x*scaleX, target.getHeight() - (y - yOffset)*scaleY); // ???????
-            glVertex2f((x + quadWidth)*scaleX, target.getHeight() - (y - yOffset)*scaleY); // ???????
-            glVertex2f((x + quadWidth)*scaleX, target.getHeight() - ((y + quadHeight) - yOffset)*scaleY); // ???????
-            glVertex2f(x*scaleX, target.getHeight() - ((y + quadHeight) - yOffset)*scaleY); // ???????
+            glVertex2f(x * scaleX, target.getHeight() - (y - yOffset) * scaleY); // ???????
+            glVertex2f((x + quadWidth) * scaleX, target.getHeight() - (y - yOffset) * scaleY); // ???????
+            glVertex2f((x + quadWidth) * scaleX, target.getHeight() - ((y + quadHeight) - yOffset) * scaleY); // ???????
+            glVertex2f(x * scaleX, target.getHeight() - ((y + quadHeight) - yOffset) * scaleY); // ???????
         }
         glEnd();
-        
+
         glScalef(floatTargetWidth / floatWidth, floatTargetHeight / floatHeight, 1.0f);//glScalef(1.0f, 1.0f, 1.0f); // Меняем масштаб обратно
         glDisable(GL_QUADS);
         glBindTexture(GL_TEXTURE_2D, 0);
@@ -295,7 +326,7 @@ public class OpenGLManager {
         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
         glViewport(0, 0, this.width, this.height);
     }
-    
+
     public void drawQuad(int quadWidth, int quadHeight, float x, float y, RGBColor color, Texture target) {
         drawQuad(quadWidth, quadHeight, x, y, color.getRed(), color.getGreen(), color.getBlue(), target);
     }
@@ -352,7 +383,12 @@ public class OpenGLManager {
     }
 
     public void renderScene() {
+        glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
+        glClear(GL_COLOR_BUFFER_BIT);
         scene.render();
+        if (mouseGrabbed) {
+            drawTexture(cursor, Mouse.getX(), height - Mouse.getY());
+        }
         Display.update();
         Display.sync(fps);
     }
@@ -457,5 +493,9 @@ public class OpenGLManager {
         }
         isListening = false;
         listeningThread = null;
+    }
+
+    public void setCursor(Texture cursor) {
+        this.cursor = cursor;
     }
 }
