@@ -246,12 +246,14 @@ public class OpenGLManager {
         glScalef(floatWidth / floatTargetWidth, floatHeight / floatTargetHeight, 1.0f);
 
         final int yOffset = 0;
-        float xBegin = fromX / width;
-        float yBegin = fromY / height;
-        float xEnd = toX / width;
-        float yEnd = toY / height;
+        float textureWidth = texture.getWidth();
+        float textureHeight = texture.getHeight();
+        float xBegin = fromX / textureWidth;
+        float yBegin = fromY / textureHeight;
+        float xEnd = toX / textureWidth;
+        float yEnd = toY / textureHeight;
         width = toX - fromX;
-        height = (int) (toY - fromY);
+        height = (toY - fromY);
 
         glBegin(GL_QUADS);
         {
