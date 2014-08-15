@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Grounds>
+  <ground id="0">
+    <imageFile>gr\img\default.png</imageFile>
+    <soundFile>gr\snd\default.wav</soundFile>
+	<name>красный</name>
+    <row>0</row>
+    <col>0</col>
+  </ground>
+  <ground id="1">
+    <imageFile>gr\img\default.png</imageFile>
+    <soundFile>gr\snd\default.wav</soundFile>
+	<name>жёлтый</name>
+    <row>0</row>
+    <col>1</col>
+  </ground>
+  <ground id="2">
+    <imageFile>gr\img\default.png</imageFile>
+    <soundFile>gr\snd\default.wav</soundFile>
+	<name>фиолетовый</name>
+    <row>0</row>
+    <col>2</col>
+  </ground>
+  <ground id="3">
+    <imageFile>gr\img\default.png</imageFile>
+    <soundFile>gr\snd\default.wav</soundFile>
+	<name>белый</name>
+    <row>0</row>
+    <col>3</col>
+  </ground>
+  <ground id="4">
+    <imageFile>gr\img\default.png</imageFile>
+    <soundFile>gr\snd\default.wav</soundFile>
+	<name>зелёный</name>
+    <row>1</row>
+    <col>0</col>
+  </ground>
+  <ground id="5">
+    <imageFile>gr\img\default.png</imageFile>
+    <soundFile>gr\snd\default.wav</soundFile>
+	<name>синий</name>
+    <row>1</row>
+    <col>1</col>
+  </ground>
+  <ground id="6">
+    <imageFile>gr\img\default.png</imageFile>
+    <soundFile>gr\snd\default.wav</soundFile>
+	<name>темно-жёлтый</name>
+    <row>1</row>
+    <col>2</col>
+  </ground>
+  <ground id="7">
+    <imageFile>gr\img\default.png</imageFile>
+    <soundFile>gr\snd\default.wav</soundFile>
+	<name>серый</name>
+    <row>1</row>
+    <col>3</col>
+  </ground>
+  <ground id="8">
+    <imageFile>gr\img\default.png</imageFile>
+    <soundFile>gr\snd\default.wav</soundFile>
+	<name>голубой</name>
+    <row>2</row>
+    <col>0</col>
+  </ground>
+  <ground id="9">
+    <imageFile>gr\img\default.png</imageFile>
+    <soundFile>gr\snd\default.wav</soundFile>
+	<name>розовый</name>
+    <row>2</row>
+    <col>1</col>
+  </ground>
+  <ground id="10">
+    <imageFile>gr\img\default.png</imageFile>
+    <soundFile>gr\snd\default.wav</soundFile>
+	<name>светло-зелёный</name>
+    <row>2</row>
+    <col>2</col>
+  </ground>
+  <ground id="11">
+    <imageFile>gr\img\default.png</imageFile>
+    <soundFile>gr\snd\default.wav</soundFile>
+	<name>светло-синий</name>
+    <row>2</row>
+    <col>3</col>
+  </ground>
+  <ground id="12">
+    <imageFile>gr\img\default.png</imageFile>
+    <soundFile>gr\snd\default.wav</soundFile>
+	<name>коричневый</name>
+    <row>3</row>
+    <col>0</col>
+  </ground>
+  <ground id="13">
+    <imageFile>gr\img\default.png</imageFile>
+    <soundFile>gr\snd\default.wav</soundFile>
+	<name>cyan</name>
+    <row>3</row>
+    <col>1</col>
+  </ground>
+  <ground id="14">
+    <imageFile>gr\img\default.png</imageFile>
+    <soundFile>gr\snd\default.wav</soundFile>
+	<name>синий 2</name>
+    <row>3</row>
+    <col>2</col>
+  </ground>
+  <ground id="15">
+    <imageFile>gr\img\default.png</imageFile>
+    <soundFile>gr\snd\default.wav</soundFile>
+	<name>оранжевый</name>
+    <row>3</row>
+    <col>3</col>
+  </ground>
+</Grounds>

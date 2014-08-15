@@ -6,8 +6,7 @@
 package opengl2dutils;
 
 import java.io.IOException;
-import opengl2dutils.test.CompositeTextureTestScene;
-import opengl2dutils.test.TestScene2;
+import opengl2dutils.test.*;
 import org.lwjgl.opengl.Display;
 
 /**
@@ -21,7 +20,7 @@ public class Test {
      */
     public static void main(String[] args) throws IOException {
         OpenGLManager gm = new OpenGLManager();
-        gm.setFPS(100).setFullscreen(false).setMouseGrabbed(true).setWindowTitle("Test");
+        gm.setFPS(100).setFullscreen(false).setMouseGrabbed(false).setWindowTitle("Test");
         gm.init();
         
         Texture cursor = gm.createTexture(10, 10);
@@ -33,7 +32,8 @@ public class Test {
         gm.drawQuad(2, 8, 7, 1, 255, 255, 255, cursor);
         gm.setCursor(cursor);
         //gm.setScene(new TestScene2(gm));
-        gm.setScene(new CompositeTextureTestScene(gm));
+        //gm.setScene(new CompositeTextureTestScene(gm));
+        gm.setScene(new CompositeTextureTestScene2(gm));
         while (!Display.isCloseRequested()) {
             gm.renderScene();
         }

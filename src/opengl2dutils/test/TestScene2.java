@@ -30,7 +30,7 @@ public class TestScene2 implements GraphicScene {
         //gm.drawTexture(t2, 20, 20, t3);
         /*gm.drawTexture(t2, 30, 00, t3);
          gm.drawTexture(t2, 190, 83, t3);*/
-        gm.drawTexture(t2, 0, 0, 128, 64, 0, 0, t2.getWidth(), t2.getHeight(), t3);
+        gm.drawTexture(t2, 0, 0, 28, 20, 50, 20, t2.getWidth()-50, t2.getHeight()-20, t3);
         gm.drawTexture(t3, 0, 0, t1);
         //GL11.glScalef(2, 2, 2);
         RGBColor color = new RGBColor();
@@ -57,7 +57,7 @@ public class TestScene2 implements GraphicScene {
 
     @Override
     public void render() {
-        gm.drawTexture(t1, 0, 0);
+        gm.drawTexture(t3, 0, 0);
         gm.drawQuad(20, 30, 0, 30, 0, 0, 0);
     }
 
