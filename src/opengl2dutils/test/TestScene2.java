@@ -18,7 +18,7 @@ public class TestScene2 implements GraphicScene {
     private final Texture t1;
     private final Texture t2;
     private final Texture t3;
-    private final Texture cursor;
+    
 
     public TestScene2(OpenGLManager gm) {
         this.gm = gm;
@@ -26,14 +26,7 @@ public class TestScene2 implements GraphicScene {
         t2 = gm.createTexture("ship.png", "PNG");
         //gm.drawQuad(500, 500, 0, 0, 0, 0, 0, t2);
         t3 = gm.createTexture(500, 500);
-        cursor = gm.createTexture(10, 10);
-        gm.drawQuad(4, 10, 0, 0, 0, 0, 0, cursor);
-        gm.drawQuad(10, 4, 0, 0, 0, 0, 0, cursor);
-        gm.drawQuad(4, 10, 6, 0, 0, 0, 0, cursor);
-        gm.drawQuad(2, 8, 1, 1, 255, 255, 255, cursor);
-        gm.drawQuad(8, 2, 1, 1, 255, 255, 255, cursor);
-        gm.drawQuad(2, 8, 7, 1, 255, 255, 255, cursor);
-        gm.setCursor(cursor);
+        
         //gm.drawTexture(t2, 20, 20, t3);
         /*gm.drawTexture(t2, 30, 00, t3);
          gm.drawTexture(t2, 190, 83, t3);*/

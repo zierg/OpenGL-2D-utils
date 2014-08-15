@@ -124,6 +124,4 @@ public class TestScene1 implements GraphicScene {
             ex.printStackTrace();
         }
     }
-    
-    
 }
