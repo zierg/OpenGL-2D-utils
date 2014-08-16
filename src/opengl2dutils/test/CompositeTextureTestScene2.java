@@ -57,10 +57,6 @@ public class CompositeTextureTestScene2 implements GraphicScene {
         for (Ground ground : groundArray) {
             int textX = ground.col * FILE_GROUND_SIZE;
             int textY = ground.row * FILE_GROUND_SIZE;
-            System.out.println("textX = " + textX);
-            System.out.println("textY = " + textY);
-            System.out.println("groundsTexture.width = " + groundsTexture.getWidth());
-            System.out.println("groundsTexture.height = " + groundsTexture.getHeight());
             grounds[ground.id] = gm.createTexture(GROUND_SIZE, GROUND_SIZE);
             gm.drawTexture(groundsTexture, 0, 0, GROUND_SIZE, GROUND_SIZE, textX, textY, textX + FILE_GROUND_SIZE, textY + FILE_GROUND_SIZE, grounds[ground.id]);
         }
@@ -86,14 +82,19 @@ public class CompositeTextureTestScene2 implements GraphicScene {
 
     @Override
     public void listenMouse() {
+        if (Mouse.isButtonDown(0)) {
+            System.out.println("x:" + Mouse.getX() + ", y:" + Mouse.getY());
+        }
     }
-
+    
+    int x = 0;
     @Override
     public void makeChanges() {
+        x++;
     }
 
     @Override
     public void render() {
-        gm.drawTexture(levelTexture, 0, 0);
+        gm.drawTexture(levelTexture, x, 0);
     }
 }

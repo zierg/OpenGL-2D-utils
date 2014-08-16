@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import static org.lwjgl.opengl.EXTFramebufferObject.*;
@@ -25,10 +24,19 @@ import org.newdawn.slick.util.ResourceLoader;
 public class OpenGLManager {
 
     private Texture cursor;
-
+    //--
+    private boolean fpsInTitle = false;
+    /**
+     * frames per second
+     */
+    int currentFPS;
+    /**
+     * last fps time
+     */
+    long lastFPS;
+    //--
     private boolean isListening = false;
     private int listeningInterval = 10;
-
     private boolean fullscreen = false;
     private int width = 800;
     private int height = 600;
@@ -38,7 +46,6 @@ public class OpenGLManager {
     private String title = "Program";
     private GraphicScene scene = null;
     private ListeningThread listeningThread = null;
-
     private final Map<Integer, Integer> framebuffers = new HashMap<>();
 
     private class ListeningThread extends Thread {
@@ -76,6 +83,7 @@ public class OpenGLManager {
     }
 
     public OpenGLManager() {
+        lastFPS = getTime();
     }
 
     public void drawTexture(Texture texture, float x, float y) {
@@ -137,27 +145,27 @@ public class OpenGLManager {
             throw new RuntimeException(ex);
         }
     }
-    
+
     public CompositeTexture createCompositeTexture() {
         return new CompositeTexture(this);
     }
-    
+
     public void drawTexture(CompositeTexture texture, float x, float y) {
         texture.draw(x, y);
     }
-    
+
     public void drawTexture(Texture texture, float x, float y, CompositeTexture target) {
         target.addTexture(texture, x, y);
     }
-    
+
     public void drawTexture(Texture texture, float x, float y, float width, float height, CompositeTexture target) {
         target.addTexture(texture, x, y, width, height);
     }
-    
+
     public void drawTexture(Texture texture, float x, float y, float width, float height, float fromX, float fromY, float toX, float toY, CompositeTexture target) {
         target.addTexture(texture, x, y, width, height, fromX, fromY, toX, toY);
     }
-    
+
     public void drawTexture(CompositeTexture texture, float x, float y, Texture target) {
         texture.draw(x, y, target);
     }
@@ -373,7 +381,8 @@ public class OpenGLManager {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-
+        
+        Mouse.init(this);
         Mouse.setGrabbed(mouseGrabbed); // Захватываем мышь.
     }
 
@@ -413,6 +422,9 @@ public class OpenGLManager {
         if (mouseGrabbed) {
             drawTexture(cursor, Mouse.getX(), height - Mouse.getY());
         }
+        if (fpsInTitle) {
+            updateFPS();
+        }
         Display.update();
         Display.sync(fps);
     }
@@ -428,11 +440,17 @@ public class OpenGLManager {
     }
 
     public void destroy() {
+        stopListeningThread();
         Display.destroy();
     }
 
     public void setScene(GraphicScene scene) {
         this.scene = scene;
+    }
+
+    public OpenGLManager setFpsInTitle(boolean showFps) {
+        this.fpsInTitle = showFps;
+        return this;
     }
 
     public OpenGLManager setListeningInterval(int interval) {
@@ -522,12 +540,26 @@ public class OpenGLManager {
     public void setCursor(Texture cursor) {
         this.cursor = cursor;
     }
-    
+
     int getWidth() {
         return width;
     }
-    
+
     int getHeight() {
         return height;
+    }
+
+    public long getTime() {
+        return (Sys.getTime() * 1000) / Sys.getTimerResolution();
+    }
+
+    @Deprecated
+    private void updateFPS() {
+        if (getTime() - lastFPS > 1000) {
+            Display.setTitle(title + "; FPS: " + currentFPS);
+            currentFPS = 0;
+            lastFPS += 1000;
+        }
+        currentFPS++;
     }
 }

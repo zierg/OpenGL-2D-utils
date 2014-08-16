@@ -20,7 +20,7 @@ public class Test {
      */
     public static void main(String[] args) throws IOException {
         OpenGLManager gm = new OpenGLManager();
-        gm.setFPS(100).setFullscreen(false).setMouseGrabbed(false).setWindowTitle("Test");
+        gm.setFPS(100).setFullscreen(false).setMouseGrabbed(false).setWindowTitle("Test").setFpsInTitle(true);
         gm.init();
         
         Texture cursor = gm.createTexture(10, 10);
@@ -34,6 +34,7 @@ public class Test {
         //gm.setScene(new TestScene2(gm));
         //gm.setScene(new CompositeTextureTestScene(gm));
         gm.setScene(new CompositeTextureTestScene2(gm));
+        gm.startListeningThread();
         while (!Display.isCloseRequested()) {
             gm.renderScene();
         }
