@@ -4,20 +4,29 @@
  */
 package opengl2dutils;
 
+import org.lwjgl.LWJGLException;
+
 /**
  *
  * @author Ivan
  */
 public class Mouse {
-    
+
     private static OpenGLManager gm;
     private static int width;
     private static int height;
 
     private Mouse() {
     }
-    
+
     static void init(OpenGLManager openGlManager) {
+        if (!org.lwjgl.input.Mouse.isCreated()) {
+            try {
+                org.lwjgl.input.Mouse.create();
+            } catch (LWJGLException ex) {
+                ex.printStackTrace();
+            }
+        }
         gm = openGlManager;
         width = gm.getWidth();
         height = gm.getHeight();

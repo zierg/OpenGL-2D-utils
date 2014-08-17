@@ -48,6 +48,7 @@ public class CompositeTexture {
     }
 
     private final OpenGLManager gm;
+    private float scale = 1.5f;
 
     private final List<TextureInfo> textures = new ArrayList<>();
 
@@ -66,6 +67,14 @@ public class CompositeTexture {
         textures.clear();
     }
     
+    public void setScale(float scale) {
+        this.scale = scale;
+    }
+    
+    public float getScale() {
+        return scale;
+    }
+    
     void addTexture(Texture texture, float x, float y) {
         textures.add(new TextureInfo(texture, x, y));
     }
@@ -82,15 +91,17 @@ public class CompositeTexture {
         int width = gm.getWidth();
         int height = gm.getHeight();
         for (TextureInfo t : textures) {
-            float coordX = x + t.x;
-            float coordY = y + t.y;
+            float coordX = (x + (int)((t.x) * scale));
+            float coordY = (y + (int)((t.y) * scale));
+            float tWidth =  (t.width  * scale) ;
+            float tHeight =  (t.height * scale);
             if (!(
-                    (coordX + t.width < 0) ||
+                    (coordX + tWidth < 0) ||
                     (coordX > width) ||
-                    (coordY + t.height < 0) ||
+                    (coordY + tHeight < 0) ||
                     (coordY > height)
                     )) {
-                gm.drawTexture(t.texture, coordX, coordY, t.width, t.height, t.fromX, t.fromY, t.toX, t.toY);
+                gm.drawTexture(t.texture, coordX, coordY, tWidth, tHeight, t.fromX, t.fromY, t.toX, t.toY);
             }
         }
     }

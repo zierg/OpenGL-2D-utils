@@ -120,7 +120,7 @@ public class OpenGLManager {
 
     public Texture createTexture(int width, int height) {
         int textureID = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, textureID);									// Bind the colorbuffer texture
+        bindTexture(textureID);									// Bind the colorbuffer texture
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);				// make it linear filterd
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_INT, (java.nio.ByteBuffer) null);	// Create the texture data
 
@@ -128,7 +128,7 @@ public class OpenGLManager {
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // Фоновый серый цвет. Для теста, полностью ли текстура заполняется уровнем (если нет, будет виден фон)
         glClear(GL_COLOR_BUFFER_BIT);			// Clear Screen And Depth Buffer on the fbo to red
         glLoadIdentity();
-        glBindTexture(GL_TEXTURE_2D, 0);
+        bindTexture(0);
 
         Texture texture = new Texture(textureID, width, height);
         return texture;
@@ -138,7 +138,7 @@ public class OpenGLManager {
         try {
             org.newdawn.slick.opengl.Texture tex = TextureLoader.getTexture(type, ResourceLoader.getResourceAsStream(filePath));
             glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-            glBindTexture(GL_TEXTURE_2D, 0);
+            bindTexture(0);
             Texture texture = new Texture(tex.getTextureID(), tex.getTextureWidth(), tex.getTextureHeight());
             return texture;
         } catch (IOException ex) {
@@ -197,10 +197,10 @@ public class OpenGLManager {
             return;
         }
         glEnable(GL_TEXTURE_2D);
-        glColor3f(1, 1, 1);
-        glViewport(0, 0, this.width, this.height);
-        glScalef(1.0f, 1.0f, 1.0f);
-        glBindTexture(GL_TEXTURE_2D, texture.getId());
+        //glColor3f(1, 1, 1);
+        //glViewport(0, 0, this.width, this.height);
+        //glScalef(1.0f, 1.0f, 1.0f);
+        bindTexture(texture.getId());
         float textureWidth = texture.getWidth();
         float textureHeight = texture.getHeight();
         float xBegin = fromX / textureWidth;
@@ -220,7 +220,7 @@ public class OpenGLManager {
         }
         glEnd();
         glDisable(GL_QUADS);
-        glBindTexture(GL_TEXTURE_2D, 0);
+        bindTexture(0);
     }
 
     public void drawTexture(Texture texture, float x, float y, float width, float height, float fromX, float fromY, float toX, float toY, Texture target) {
@@ -243,7 +243,7 @@ public class OpenGLManager {
         glEnable(GL_TEXTURE_2D);
         glColor3f(1, 1, 1);
 
-        glBindTexture(GL_TEXTURE_2D, textureID);
+        bindTexture(textureID);
 
         glViewport(0, 0, target.getWidth(), target.getHeight());
 
@@ -283,7 +283,7 @@ public class OpenGLManager {
 
     public void drawQuad(int quadWidth, int quadHeight, float x, float y, int red, int green, int blue) {
         final float COLOR_MAX = 255;
-        glBindTexture(GL_TEXTURE_2D, 0);
+        bindTexture(0);
         glEnable(GL_TEXTURE_2D);
         glViewport(0, 0, this.width, this.height);
         glScalef(1.0f, 1.0f, 1.0f);
@@ -297,7 +297,7 @@ public class OpenGLManager {
         }
         glEnd();
         glDisable(GL_QUADS);
-        glBindTexture(GL_TEXTURE_2D, 0);
+        bindTexture(0);
     }
 
     public void drawQuad(int quadWidth, int quadHeight, float x, float y, RGBColor color) {
@@ -324,7 +324,7 @@ public class OpenGLManager {
         glEnable(GL_TEXTURE_2D);
         glColor3f(1, 1, 1);
 
-        glBindTexture(GL_TEXTURE_2D, 0);
+        bindTexture(0);
 
         glViewport(0, 0, target.getWidth(), target.getHeight());
 
@@ -353,7 +353,7 @@ public class OpenGLManager {
 
         glScalef(floatTargetWidth / floatWidth, floatTargetHeight / floatHeight, 1.0f);//glScalef(1.0f, 1.0f, 1.0f); // Меняем масштаб обратно
         glDisable(GL_QUADS);
-        glBindTexture(GL_TEXTURE_2D, 0);
+        bindTexture(0);
 
         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
         glViewport(0, 0, this.width, this.height);
@@ -372,7 +372,7 @@ public class OpenGLManager {
         } catch (LWJGLException e) {
             throw new GraphicException(e);
         }
-
+        Mouse.init(this);
         glViewport(0, 0, width, height);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
@@ -382,7 +382,7 @@ public class OpenGLManager {
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
         
-        Mouse.init(this);
+        
         Mouse.setGrabbed(mouseGrabbed); // Захватываем мышь.
     }
 
@@ -561,5 +561,14 @@ public class OpenGLManager {
             lastFPS += 1000;
         }
         currentFPS++;
+    }
+    
+    private int lastBindedTexture = 0;
+    
+    private void bindTexture(int textureId) {
+        if (textureId != lastBindedTexture || textureId == 0) {
+            glBindTexture(GL_TEXTURE_2D, textureId);
+           // lastBindedTexture = textureId;
+        }
     }
 }

@@ -21,7 +21,7 @@ public class Texture {
         this.height = height;
     }
 
-    int getId() {
+    public int getId() {
         return id;
     }
 
